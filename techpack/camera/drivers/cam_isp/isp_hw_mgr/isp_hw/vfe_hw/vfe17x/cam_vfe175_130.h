@@ -87,6 +87,7 @@ static struct cam_vfe_camif_reg_data vfe_175_130_camif_reg_data = {
 	.subscribe_irq_mask0             = 0x00000017,
 	.subscribe_irq_mask1             = 0x00000000,
 	.enable_diagnostic_hw            = 0x1,
+	.dual_vfe_sync_mask              = 0x3,
 };
 
 static struct cam_vfe_fe_ver1_reg vfe175_130_fe_reg = {

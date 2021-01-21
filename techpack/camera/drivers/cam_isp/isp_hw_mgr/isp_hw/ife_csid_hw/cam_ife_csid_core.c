@@ -2251,6 +2251,7 @@ static int cam_ife_csid_enable_pxl_path(
 	uint32_t                                  val = 0;
 	struct cam_isp_sensor_dimension          *path_config;
 	unsigned int                              irq_mask_val = 0;
+	uint32_t                                  camera_hw_version;
 
 	path_data = (struct cam_ife_csid_path_cfg   *) res->res_priv;
 	csid_reg = csid_hw->csid_info->csid_reg;
@@ -2303,6 +2304,8 @@ static int cam_ife_csid_enable_pxl_path(
 		}
 	}
 
+	cam_cpas_get_cpas_hw_version(&camera_hw_version);
+
 	/* Set master or slave path */
 	if (path_data->sync_mode == CAM_ISP_HW_SYNC_MASTER) {
 		/*Set halt mode as master */
@@ -2313,7 +2316,8 @@ static int cam_ife_csid_enable_pxl_path(
 			val = CSID_HALT_MODE_MASTER << 2;
 	} else if (path_data->sync_mode == CAM_ISP_HW_SYNC_SLAVE) {
 		/*Set halt mode as slave and set master idx */
-		if (pxl_reg->halt_master_sel_en)
+		if (pxl_reg->halt_master_sel_en ||
+			camera_hw_version == CAM_CPAS_TITAN_165_V100)
 			val = CSID_HALT_MODE_SLAVE << 2;
 		else
 			val = path_data->master_idx  << 4 |
@@ -2322,6 +2326,7 @@ static int cam_ife_csid_enable_pxl_path(
 		/* Default is internal halt mode */
 		val = 0;
 	}
+
 	/*
 	 * Resume at frame boundary if Master or No Sync.
 	 * Slave will get resume command from Master.
