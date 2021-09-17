@@ -32,6 +32,7 @@
 #include "kgsl_device.h"
 #include "kgsl_mmu.h"
 #include "kgsl_pool.h"
+#include "kgsl_sharedmem.h"
 #include "kgsl_sync.h"
 #include "kgsl_sysfs.h"
 #include "kgsl_trace.h"
@@ -4634,7 +4635,6 @@ void kgsl_device_platform_remove(struct kgsl_device *device)
 		device->events_wq = NULL;
 	}
 
-	kgsl_device_snapshot_close(device);
 
 	if (device->gpu_sysfs_kobj.state_initialized)
 		kobject_del(&device->gpu_sysfs_kobj);
