@@ -192,8 +192,9 @@ retry_vendor:
 		if (!__cpupri_find(cp, p, lowest_mask, idx))
 #else
 		if (!__cpupri_find(cp, p, lowest_mask, idx, drop_nopreempts))
-			continue;
 #endif
+			continue;
+		
 		if (drop_vendor)
 			trace_android_rvh_cpupri_find_fitness(p, lowest_mask);
 
