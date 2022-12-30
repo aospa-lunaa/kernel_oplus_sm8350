@@ -815,7 +815,7 @@ static void __dump_effects(struct haptics_chip *chip)
 			pos += scnprintf(str, size, "%s", "FIFO data: ");
 			for (j = 0; j < effect->fifo->num_s; j++)
 				pos += scnprintf(str + pos, size - pos, "%d ",
-						(s8)effect->fifo->samples[j]);
+						(u8)effect->fifo->samples[j]);
 
 			dev_dbg(chip->dev, "%s\n", str);
 			kfree(str);
@@ -2370,7 +2370,7 @@ static int haptics_load_custom_effect(struct haptics_chip *chip,
 	struct custom_fifo_data custom_data = {};
 	struct fifo_cfg *fifo;
 	int rc;
-
+        int i;
 	if (!chip->custom_effect || !chip->custom_effect->fifo)
 		return -ENOMEM;
 
@@ -2413,12 +2413,22 @@ static int haptics_load_custom_effect(struct haptics_chip *chip,
 //endif
 	}
 
-	if (copy_from_user(fifo->samples,
-				(u8 __user *)custom_data.data,
-				custom_data.length)) {
-		rc = -EFAULT;
-		goto cleanup;
+       if (copy_from_user(fifo->samples,
+			(u8 __user *)custom_data.data,
+			custom_data.length)) {
+	printk(KERN_INFO "Error copying data from user space\n");
+	rc = -EFAULT;
+	goto cleanup;
+        } else {
+	printk(KERN_CONT "Copied FIFO data: ");
+	for (i = 0; i < custom_data.length; i++) {
+		printk(KERN_CONT "%u", fifo->samples[i]);
+		if (i < custom_data.length - 1) {
+			printk(KERN_CONT ", ");
+		}
 	}
+	printk(KERN_CONT "\n");
+        }
 
 	dev_dbg(chip->dev, "Copy custom FIFO samples successfully\n");
 	fifo->num_s = custom_data.length;
@@ -2427,6 +2437,9 @@ static int haptics_load_custom_effect(struct haptics_chip *chip,
 #endif
 	fifo->play_length_us = get_fifo_play_length_us(fifo,
 			chip->custom_effect->t_lra_us);
+
+	dev_dbg(chip->dev, "Custom FIFO data play length: %dus\n",
+					fifo->play_length_us);
 
 	if (chip->play.in_calibration) {
 		dev_err(chip->dev, "calibration in progress, ignore playing custom effect\n");
