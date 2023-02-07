@@ -138,8 +138,6 @@ struct ux_sched_cputopo {
 };
 
 #ifdef CONFIG_OPLUS_SYSTEM_KERNEL_QCOM
-extern unsigned int walt_scale_demand_divisor;
-#else
 extern unsigned int walt_ravg_window;
 #define walt_scale_demand_divisor  (walt_ravg_window >> SCHED_CAPACITY_SHIFT)
 #endif
