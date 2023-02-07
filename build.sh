@@ -5,9 +5,9 @@
 
 SECONDS=0 # builtin bash timer
 ZIPNAME="topazkernel-RMX3360-$(date '+%Y%m%d-%H%M').zip"
-#TC_DIR="$(pwd)/../work/tc/linux-x86/clang-r450784d"
-#GCC_64_DIR="$(pwd)/../work/tc/linux-x86/aarch64-linux-android-4.9"
-#GCC_32_DIR="$(pwd)/../work/tc/linux-x86/arm-linux-androideabi-4.9"
+TC_DIR="$(pwd)/../work/tc/linux-x86/clang-r450784d"
+GCC_64_DIR="$(pwd)/../work/tc/linux-x86/aarch64-linux-android-4.9"
+GCC_32_DIR="$(pwd)/../work/tc/linux-x86/arm-linux-androideabi-4.9"
 export PATH="$TC_DIR/bin:$PATH"
 AK3_DIR="AnyKernel3"
 DEFCONFIG="vendor/lahaina-qgki_defconfig"
