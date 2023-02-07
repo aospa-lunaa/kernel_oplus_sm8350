@@ -1,18 +1,26 @@
 #!/bin/bash
 #
 # Compile script for QuicksilveR kernel
-# Copyright (C) 2020-2023 Adithya R.
+# Copyright (C) 2020-2021 Adithya R.
 
 SECONDS=0 # builtin bash timer
 ZIPNAME="topazkernel-RMX3360-$(date '+%Y%m%d-%H%M').zip"
-TC_DIR="$(pwd)/../work/tc/linux-x86/clang-r475365b"
+#TC_DIR="$(pwd)/../work/tc/linux-x86/clang-r450784d"
+#GCC_64_DIR="$(pwd)/../work/tc/linux-x86/aarch64-linux-android-4.9"
+#GCC_32_DIR="$(pwd)/../work/tc/linux-x86/arm-linux-androideabi-4.9"
+export PATH="$TC_DIR/bin:$PATH"
 AK3_DIR="AnyKernel3"
-DEFCONFIG="lunaa-qgki_defconfig"
+DEFCONFIG="vendor/lahaina-qgki_defconfig"
 
-# clang-16
-MAKE_PARAMS="O=out ARCH=arm64 CC=clang LLVM=1 LLVM_IAS=1 \
-	    CROSS_COMPILE=$TC_DIR/bin/aarch64-linux-gnu- \
-        CROSS_COMPILE_COMPAT=$TC_DIR/bin/arm-linux-gnueabi-"
+#clang-16
+# MAKE_PARAMS="O=out ARCH=arm64 CC=clang LLVM=1 LLVM_IAS=1 \
+#	    CROSS_COMPILE=$TC_DIR/bin/aarch64-linux-gnu- \
+#        CROSS_COMPILE_COMPAT=$TC_DIR/bin/arm-linux-gnueabi-"
+
+# clang-14
+MAKE_PARAMS="O=out ARCH=arm64 CC=clang CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 \
+       CROSS_COMPILE=$GCC_64_DIR/bin/aarch64-linux-android- \
+       CROSS_COMPILE_COMPAT=$GCC_32_DIR/bin/arm-linux-androideabi-"
 
 export PATH="$TC_DIR/bin:$PATH"
 
@@ -52,8 +60,7 @@ if [[ $2 = "-c" || $1 = "--clean" ]]; then
 fi
 
 mkdir -p out
-make $MAKE_PARAMS $DEFCONFIG
-ARCH=arm64 CC=clang CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 CROSS_COMPILE=$GCC_64_DIR/bin/aarch64-linux-android- CROSS_COMPILE_ARM32=$GCC_32_DIR/bin/arm-linux-androideabi- scripts/kconfig/merge_config.sh -O out arch/arm64/configs/vendor/lahaina-qgki_defconfig arch/arm64/configs/vendor/oplus_QGKI.config
+make $MAKE_PARAMS $DEFCONFIG ARCH=arm64 CC=clang CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 CROSS_COMPILE=$GCC_64_DIR/bin/aarch64-linux-android- CROSS_COMPILE_ARM32=$GCC_32_DIR/bin/arm-linux-androideabi- scripts/kconfig/merge_config.sh -O out arch/arm64/configs/vendor/lahaina-qgki_defconfig arch/arm64/configs/vendor/oplus_QGKI.config
 
 echo -e "\nStarting compilation...\n"
 make -j$(nproc --all) $MAKE_PARAMS || exit $?
@@ -64,7 +71,7 @@ if [ -f "$kernel" ]; then
 	echo -e "\nKernel compiled succesfully! Zipping up...\n"
 	if [ -d "$AK3_DIR" ]; then
 		cp -r $AK3_DIR AnyKernel3
-	elif ! git clone -q https://github.com/lunaa-dev/AnyKernel3; then
+	elif ! git clone -q https://github.com/bheatleyyy/AnyKernel3; then
 		echo -e "\nAnyKernel3 repo not found locally and couldn't clone from GitHub! Aborting..."
 		exit 1
 	fi
