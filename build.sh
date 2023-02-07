@@ -4,22 +4,15 @@
 # Copyright (C) 2020-2023 Adithya R.
 
 SECONDS=0 # builtin bash timer
-ZIPNAME="lokurwa-RMX3360-$(date '+%Y%m%d-%H%M').zip"
-TC_DIR="/home/rk/aospa/work/tc/linux-x86/clang-r450784d"
-GCC_64_DIR="/home/rk/aospa/work/tc/aarch64-linux-android-4.9"
-GCC_32_DIR="/home/rk/aospa/work/tc/arm-linux-androideabi-4.9"
+ZIPNAME="topazkernel-RMX3360-$(date '+%Y%m%d-%H%M').zip"
+TC_DIR="$(pwd)/../work/tc/linux-x86/clang-r475365b"
 AK3_DIR="AnyKernel3"
-DEFCONFIG="vendor/lahaina-qgki_defconfig"
+DEFCONFIG="lunaa-qgki_defconfig"
 
-#clang-16
-#MAKE_PARAMS="O=out ARCH=arm64 CC=clang LLVM=1 LLVM_IAS=1 \
-#	    CROSS_COMPILE=$TC_DIR/bin/aarch64-linux-gnu- \
-#        CROSS_COMPILE_COMPAT=$TC_DIR/bin/arm-linux-gnueabi-"
-
-# clang-14
-MAKE_PARAMS="O=out ARCH=arm64 CC=clang CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 \
-       CROSS_COMPILE=$GCC_64_DIR/bin/aarch64-linux-android- \
-       CROSS_COMPILE_COMPAT=$GCC_32_DIR/bin/arm-linux-androideabi-"
+# clang-16
+MAKE_PARAMS="O=out ARCH=arm64 CC=clang LLVM=1 LLVM_IAS=1 \
+	    CROSS_COMPILE=$TC_DIR/bin/aarch64-linux-gnu- \
+        CROSS_COMPILE_COMPAT=$TC_DIR/bin/arm-linux-gnueabi-"
 
 export PATH="$TC_DIR/bin:$PATH"
 
