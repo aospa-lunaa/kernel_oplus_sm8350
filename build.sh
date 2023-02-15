@@ -6,7 +6,7 @@
 
 SECONDS=0 # builtin bash timer
 ZIPNAME="Gato-martini-$(date '+%Y%m%d-%H%M').zip"
-TC_DIR="/workspace/buildbot/tc/playgroundtc-16"
+TC_DIR="/home/rahul/aospa/prebuilts/clang/kernel/linux-x86/playground"
 export PATH="$TC_DIR/bin:$PATH"
 AK3_DIR="AnyKernel3"
 DEFCONFIG="vendor/lahaina-qgki_defconfig"
